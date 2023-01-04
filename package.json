@@ -1,0 +1,31 @@
+{
+  "name": "mdx-toc",
+  "version": "1.0.0",
+  "description": "Table of contents",
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shuoshubao/markdown-toc.git"
+  },
+  "author": "shuoshubao <759979885@qq.com>",
+  "license": "MIT",
+  "keywords": [
+    "mdx",
+    "markdown",
+    "toc",
+    "anchor",
+    "markdown-toc",
+    "markdown-it",
+    "markdown-it-toc",
+    "markdown-it-plugin",
+    "markdown-it-anchor",
+    "markdown-headers",
+    "markdown-headers-tree"
+  ],
+  "scripts": {},
+  "peerDependencies": {
+    "markdown-it": ">=8.0.0"
+  }
+}
