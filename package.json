@@ -1,6 +1,6 @@
 {
   "name": "mdx-toc",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Table of contents",
   "files": [
     "index.js"

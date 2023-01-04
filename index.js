@@ -1,15 +1,5 @@
 const MarkdownIt = require('markdown-it')
 
-const repeat = (string, times) => {
-  if (times < 0) {
-    return ''
-  }
-  if (times === 1) {
-    return string
-  }
-  return string + repeat(string, times - 1)
-}
-
 const HeaderList = [1, 2, 3, 4, 5, 6]
 
 const defaultSlugify = s => s
@@ -47,34 +37,6 @@ const getHeaders = ({ content, type, slugify }) => {
     })
 }
 
-const recursion = (node, slugify) => {
-  const children = [...node.children]
-  if (children.filter(v => v.nodeType === 1).length) {
-    const title = (node.firstChild.nodeValue || '').trim()
-    return {
-      title,
-      key: slugify(title),
-      children: (node.firstElementChild.tagName === 'UL' ? [...node.firstElementChild.children] : children).map(v => {
-        return recursion(v, slugify)
-      })
-    }
-  }
-  const { innerText } = node
-  return {
-    title: innerText,
-    key: slugify(innerText),
-    children: []
-  }
-}
-
-/**
- * getTocData
- * @param  {String} content           字符串, markdown 或者 html
- * @param  {String} options.type      'html' 或 'markdown'
- * @param  {Function} options.slugify slugify函数
- * @param  {Number} options.space     空格的数量, 默认 2
- * @return {}
- */
 module.exports = (content = '', { type = 'markdown', slugify = defaultSlugify, space = 2 }) => {
   if (!(content || '').trim()) {
     return empty
@@ -89,7 +51,7 @@ module.exports = (content = '', { type = 'markdown', slugify = defaultSlugify, s
   const headersMd = headers
     .map(v => {
       const { level, title } = v
-      return [repeat(repeat(' ', space), level - 1), '*', title].join(' ')
+      return [' '.repeat(space).repeat(level - 1), '*', title].join(' ')
     })
     .join('\n')
 
@@ -97,10 +59,30 @@ module.exports = (content = '', { type = 'markdown', slugify = defaultSlugify, s
 
   const fragment = stringToFragment(toc)
 
+  const recursion = node => {
+    const children = [...node.children]
+    if (children.filter(v => v.nodeType === 1).length) {
+      const title = (node.firstChild.nodeValue || '').trim()
+      return {
+        title,
+        key: slugify(title),
+        children: (node.firstElementChild.tagName === 'UL' ? [...node.firstElementChild.children] : children).map(v => {
+          return recursion(v)
+        })
+      }
+    }
+    const { innerText } = node
+    return {
+      title: innerText,
+      key: slugify(innerText),
+      children: []
+    }
+  }
+
   return {
     markdown: headersMd,
     html: toc,
     list: headers,
-    treeData: recursion(fragment.firstChild, slugify).children
+    treeData: recursion(fragment.firstChild).children
   }
 }
