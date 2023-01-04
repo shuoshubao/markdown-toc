@@ -35,4 +35,5 @@ const {
 
 - doctoc
 - markdown-it-toc
+- markdown-toc
 - markdown-it-table-of-contents
