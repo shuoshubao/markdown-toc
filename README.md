@@ -5,27 +5,31 @@
 # Usage
 
 ```js
+import MarkdownIt from 'markdown-it'
 import getTocData from 'mdx-toc'
 
-const content = '# Title one'
+const content = '<h1>title one</h1>'
 
-const tocData = getTocData(content, options)
+// const tocData = getTocData(content, options)
+const tocData = getTocData(content, {
+  parser: md => MarkdownIt().render(md)
+})
 
 const {
-  markdown: '',
-  html: '',
-  list: [],
+  markdown = '',
+  html = '',
+  list = [],
   treeData: []
 } = tocData
 ```
 
 # Options
 
-| Name    | Type                      | Description    | Default    |
-| ------- | ------------------------- | -------------- | ---------- |
-| type    | oneOf['html', 'markdown'] | content 的类型 | 'markdown' |
-| slugify | Function                  | slugify 函数   | s => s     |
-| space   | Number                    | 空格的数量     | 2          |
+| Name    | Type     | Description                          | Default          |
+| ------- | -------- | ------------------------------------ | ---------------- |
+| parser  | Function | function to convert markdown to html | `null`, required |
+| slugify | Function | slug function                        | s => s           |
+| space   | Number   | number of spaces                     | 2                |
 
 # Examples
 

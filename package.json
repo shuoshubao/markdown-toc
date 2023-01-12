@@ -24,11 +24,5 @@
     "markdown-headers",
     "markdown-headers-tree"
   ],
-  "scripts": {},
-  "peerDependencies": {
-    "markdown-it": ">=8.0.0"
-  },
-  "devDependencies": {
-    "markdown-it": "^13.0.1"
-  }
+  "scripts": {}
 }

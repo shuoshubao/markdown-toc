@@ -1,8 +1,4 @@
-const MarkdownIt = require('markdown-it')
-
 const HeaderList = [1, 2, 3, 4, 5, 6]
-
-const defaultSlugify = s => s
 
 const empty = {
   markdown: '',
@@ -17,10 +13,8 @@ const stringToFragment = string => {
   return renderer.content
 }
 
-const getHeaders = ({ content, type, slugify }) => {
-  const html = type === 'html' ? content : MarkdownIt().render(content)
-
-  const fragment = stringToFragment(html)
+const getHeaders = ({ content, slugify }) => {
+  const fragment = stringToFragment(content)
 
   return [...fragment.children]
     .filter(v => {
@@ -37,12 +31,23 @@ const getHeaders = ({ content, type, slugify }) => {
     })
 }
 
-module.exports = (content = '', { type = 'markdown', slugify = defaultSlugify, space = 2 }) => {
+const defaultConfig = {
+  slugify: s => s,
+  space: 2,
+  parser: null
+}
+
+module.exports = (content = '', config = {}) => {
+  const { slugify, space, parser } = { ...defaultConfig, ...config }
   if (!(content || '').trim()) {
     return empty
   }
 
-  const headers = getHeaders({ content, type, slugify })
+  if (!parser) {
+    return empty
+  }
+
+  const headers = getHeaders({ content, slugify })
 
   if (!headers.length) {
     return empty
@@ -55,7 +60,7 @@ module.exports = (content = '', { type = 'markdown', slugify = defaultSlugify, s
     })
     .join('\n')
 
-  const toc = MarkdownIt().render(headersMd)
+  const toc = parser(headersMd)
 
   const fragment = stringToFragment(toc)
 
